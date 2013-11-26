@@ -1,0 +1,102 @@
+#include "stdafx.h"
+#include "rappleAction.h"
+
+
+rappleAction::rappleAction(IEntity * ee)
+{
+	if(gEnv->pInput)
+		gEnv->pInput->AddEventListener(this);
+	auto myCVar = gEnv->pConsole->GetCVar("cl_tpvMaxWeapDistDebug");
+		myCVar->Set("1");
+		player = ee;
+		
+flowManager = gEnv->pFlowSystem->GetIModuleManager();
+}
+
+
+rappleAction::~rappleAction(void)
+{
+}
+
+
+void rappleAction::getDist(Vec3 pos, Vec3 hit)
+{
+	start = pos;
+	end = hit;
+}
+
+bool rappleAction::OnInputEvent( const SInputEvent &event )
+{
+	if (event.deviceId!=eDI_Keyboard)
+return false;
+
+if (gEnv->IsDedicated() || event.keyId == eKI_SYS_Commit)
+return false;
+
+if(!gEnv->pConsole->GetStatus() && eIS_Pressed == event.state)
+{
+   if(event.keyId == eKI_J)         
+   {
+	   executeGrappleAction();
+      return true;
+      }
+}
+
+return false;
+}
+
+void rappleAction::executeGrappleAction()
+{
+	
+	   executeGrappleAction();
+	  auto myCVar = gEnv->pConsole->GetCVar("cl_tpvMaxWeapDistDebug");
+		myCVar->Set("0");
+		//flowManager->GetModule(
+		/*
+		//gEnv->pRenderer->DrawLabel(end, 20, "This is a test");
+		{
+			f32 xx = (end.x - start.x)/100;
+			f32 yy = (end.y - start.y)/100;
+			f32 zz = (end.z - start.z)/100;
+
+			//f32 magnitude = sqrt(xx*yy*zz);
+			//magnitude /= 100;
+
+
+			//Vec3 nIntegral = Vec3(xx, yy, zz);
+			Vec3 staticEnd = end;
+			
+			for(int i = 0; i < 100; i++)
+			{
+				staticEnd.x += xx;
+				staticEnd.y += yy;
+				staticEnd.z += zz;
+				player->SetPos(staticEnd);
+			}
+		}
+		*/
+				player->SetPos(end);
+		
+
+		/*
+		SEntitySpawnParams params;
+params.sName = "TestEntity";
+params.sLayerName = "TestLayer";
+params.nFlags = ENTITY_FLAG_NO_SAVE | ENTITY_FLAG_SPAWNED;
+params.pClass = gEnv->pEntitySystem->GetClassRegistry()->GetDefaultClass();
+params.vScale = Vec3(1.0f,1.0f,1.0f);
+params.vPosition = end;
+auto e1 = gEnv->pEntitySystem->SpawnEntity(params, true);
+
+if (e1 != NULL)
+{
+   // Pick a default material
+   IMaterial *pMat = gEnv->p3DEngine->GetMaterialManager()->LoadMaterial("material_default");
+   e1->SetMaterial(pMat);
+
+   // Load some simple test geometry
+   int slotId = e1->LoadGeometry(0, "objects/default/primitive_cylinder.cgf");
+}
+*/
+
+}
